@@ -1,0 +1,91 @@
+[
+  {
+    "id": "gc-01-burnout-no-beach",
+    "persona": "Priya-style burned out solo/offbeat traveler",
+    "utterance": "I'm exhausted and want to unplug for a week, budget around 4000 per day, thinking September, no beaches please",
+    "expected": {
+      "travel_month": 9,
+      "negative_tags": ["beaches"],
+      "must_not_include_type": ["beach"],
+      "notes": "Should surface peaceful/offbeat mountain or spiritual picks, never a beach type."
+    }
+  },
+  {
+    "id": "gc-02-anniversary-couple",
+    "persona": "Rahul & Meghna anniversary couple",
+    "utterance": "My partner and I are celebrating our anniversary, want something romantic but not touristy, our budget is 8000 per day",
+    "expected": {
+      "travel_month": null,
+      "negative_tags": ["touristy"],
+      "must_not_include_type": [],
+      "notes": "Should weight romantic vibe and couple suitability; budget sits at the mid/premium boundary so soft budget_flag on premium picks is expected, not a hard exclusion."
+    }
+  },
+  {
+    "id": "gc-03-family-october",
+    "persona": "Suresh family planner",
+    "utterance": "Take my family somewhere in October, not too hot, budget 3000 per day",
+    "expected": {
+      "travel_month": 10,
+      "negative_tags": [],
+      "must_not_include_type": [],
+      "notes": "Family suitability and October seasonal fit should dominate; budget is tight (budget tier), premium picks should be hard-excluded, not just flagged."
+    }
+  },
+  {
+    "id": "gc-04-friends-weekend-budget",
+    "persona": "Anika spontaneous friends group",
+    "utterance": "Just tell us somewhere cool to go this weekend under 3000 per day with friends",
+    "expected": {
+      "travel_month": null,
+      "negative_tags": [],
+      "must_not_include_type": [],
+      "notes": "Tight budget, friends group; expect budget-tier, easy-access, short-duration destinations rather than 7+ day trips."
+    }
+  },
+  {
+    "id": "gc-05-inspiration-open",
+    "persona": "Undecided traveler in inspiration mode",
+    "utterance": "Surprise me, I'm open to anything",
+    "expected": {
+      "travel_month": null,
+      "negative_tags": [],
+      "must_not_include_type": [],
+      "expected_mode": "inspiration",
+      "notes": "Should trigger inspiration mode and weight toward higher hidden_gem_score destinations, not the most touristy picks."
+    }
+  },
+  {
+    "id": "gc-06-july-monsoon-check",
+    "persona": "PRD acceptance criterion: July query must not return monsoon-unsafe picks",
+    "utterance": "I want to travel in July, budget 5000 per day",
+    "expected": {
+      "travel_month": 7,
+      "negative_tags": [],
+      "must_not_include_type": [],
+      "notes": "Direct test of FR-03 acceptance criterion: none of the 3 results may have 7 in avoid_months without an explicit seasonal_flag."
+    }
+  },
+  {
+    "id": "gc-07-solo-offbeat",
+    "persona": "Solo traveler wanting the road less traveled",
+    "utterance": "I want to go somewhere nobody I know has been to, solo trip, budget 3500 a day, want to disconnect",
+    "expected": {
+      "travel_month": null,
+      "negative_tags": [],
+      "must_not_include_type": [],
+      "notes": "Qualitative check: average hidden_gem_score of the 3 picks should read noticeably above the dataset median (mock heuristic can't detect 'nobody has been to' directly - a real LLM would generalise further; flagged here as a known mock limitation)."
+    }
+  },
+  {
+    "id": "gc-08-wildlife-family-december",
+    "persona": "Family wanting a December wildlife trip",
+    "utterance": "Show me wildlife destinations for December, budget 6000 per day, with my family",
+    "expected": {
+      "travel_month": 12,
+      "negative_tags": [],
+      "must_not_include_type": [],
+      "notes": "Expect wildlife-type destinations in the mix; premium wildlife parks (Kanha, Bandhavgarh) should appear with a budget_flag rather than being excluded, since the gap is exactly one tier."
+    }
+  }
+]

@@ -1,0 +1,282 @@
+{
+  "generated_at": "2026-07-06T15:57:57.857Z",
+  "golden_set_size": 8,
+  "summary": {
+    "ranking": {
+      "total_cases": 8,
+      "result_count_pass_rate": 1,
+      "diversity_pass_rate": 1,
+      "constraint_violation_count": 0,
+      "avg_explanation_groundedness": 1,
+      "avg_hidden_gem_score": 4.585,
+      "avg_latency_ms": 0.125
+    },
+    "reranking": {
+      "total_cases": 8,
+      "result_count_pass_rate": 1,
+      "diversity_pass_rate": 1,
+      "constraint_violation_count": 0,
+      "avg_explanation_groundedness": 1,
+      "avg_hidden_gem_score": 4.585,
+      "avg_latency_ms": 0.25
+    }
+  },
+  "rows": [
+    {
+      "id": "gc-01-burnout-no-beach",
+      "strategy": "ranking",
+      "result_count_ok": true,
+      "diversity_ok": true,
+      "constraint_violations": [],
+      "explanation_groundedness": 1,
+      "avg_hidden_gem_score": 4.67,
+      "detected_mode": "planning",
+      "latency_ms": 1,
+      "picks": [
+        "spiti-valley",
+        "rishikesh",
+        "munnar"
+      ]
+    },
+    {
+      "id": "gc-01-burnout-no-beach",
+      "strategy": "reranking",
+      "result_count_ok": true,
+      "diversity_ok": true,
+      "constraint_violations": [],
+      "explanation_groundedness": 1,
+      "avg_hidden_gem_score": 4.67,
+      "detected_mode": "planning",
+      "latency_ms": 1,
+      "picks": [
+        "spiti-valley",
+        "rishikesh",
+        "munnar"
+      ]
+    },
+    {
+      "id": "gc-02-anniversary-couple",
+      "strategy": "ranking",
+      "result_count_ok": true,
+      "diversity_ok": true,
+      "constraint_violations": [],
+      "explanation_groundedness": 1,
+      "avg_hidden_gem_score": 2.67,
+      "detected_mode": "planning",
+      "latency_ms": 0,
+      "picks": [
+        "manali",
+        "nainital",
+        "udaipur"
+      ]
+    },
+    {
+      "id": "gc-02-anniversary-couple",
+      "strategy": "reranking",
+      "result_count_ok": true,
+      "diversity_ok": true,
+      "constraint_violations": [],
+      "explanation_groundedness": 1,
+      "avg_hidden_gem_score": 2.67,
+      "detected_mode": "planning",
+      "latency_ms": 0,
+      "picks": [
+        "manali",
+        "nainital",
+        "udaipur"
+      ]
+    },
+    {
+      "id": "gc-03-family-october",
+      "strategy": "ranking",
+      "result_count_ok": true,
+      "diversity_ok": true,
+      "constraint_violations": [],
+      "explanation_groundedness": 1,
+      "avg_hidden_gem_score": 2.33,
+      "detected_mode": "planning",
+      "latency_ms": 0,
+      "picks": [
+        "manali",
+        "nainital",
+        "jaipur"
+      ]
+    },
+    {
+      "id": "gc-03-family-october",
+      "strategy": "reranking",
+      "result_count_ok": true,
+      "diversity_ok": true,
+      "constraint_violations": [],
+      "explanation_groundedness": 1,
+      "avg_hidden_gem_score": 2.33,
+      "detected_mode": "planning",
+      "latency_ms": 0,
+      "picks": [
+        "manali",
+        "nainital",
+        "jaipur"
+      ]
+    },
+    {
+      "id": "gc-04-friends-weekend-budget",
+      "strategy": "ranking",
+      "result_count_ok": true,
+      "diversity_ok": true,
+      "constraint_violations": [],
+      "explanation_groundedness": 1,
+      "avg_hidden_gem_score": 4.67,
+      "detected_mode": "planning",
+      "latency_ms": 0,
+      "picks": [
+        "spiti-valley",
+        "rishikesh",
+        "nainital"
+      ]
+    },
+    {
+      "id": "gc-04-friends-weekend-budget",
+      "strategy": "reranking",
+      "result_count_ok": true,
+      "diversity_ok": true,
+      "constraint_violations": [],
+      "explanation_groundedness": 1,
+      "avg_hidden_gem_score": 4.67,
+      "detected_mode": "planning",
+      "latency_ms": 1,
+      "picks": [
+        "spiti-valley",
+        "rishikesh",
+        "nainital"
+      ]
+    },
+    {
+      "id": "gc-05-inspiration-open",
+      "strategy": "ranking",
+      "result_count_ok": true,
+      "diversity_ok": true,
+      "constraint_violations": [],
+      "explanation_groundedness": 1,
+      "avg_hidden_gem_score": 9,
+      "detected_mode": "inspiration",
+      "latency_ms": 0,
+      "picks": [
+        "chettinad",
+        "gopalpur-on-sea",
+        "ziro-valley"
+      ]
+    },
+    {
+      "id": "gc-05-inspiration-open",
+      "strategy": "reranking",
+      "result_count_ok": true,
+      "diversity_ok": true,
+      "constraint_violations": [],
+      "explanation_groundedness": 1,
+      "avg_hidden_gem_score": 9,
+      "detected_mode": "inspiration",
+      "latency_ms": 0,
+      "picks": [
+        "chettinad",
+        "gopalpur-on-sea",
+        "ziro-valley"
+      ]
+    },
+    {
+      "id": "gc-06-july-monsoon-check",
+      "strategy": "ranking",
+      "result_count_ok": true,
+      "diversity_ok": true,
+      "constraint_violations": [],
+      "explanation_groundedness": 1,
+      "avg_hidden_gem_score": 4,
+      "detected_mode": "planning",
+      "latency_ms": 0,
+      "picks": [
+        "spiti-valley",
+        "lonavala-khandala",
+        "jaipur"
+      ]
+    },
+    {
+      "id": "gc-06-july-monsoon-check",
+      "strategy": "reranking",
+      "result_count_ok": true,
+      "diversity_ok": true,
+      "constraint_violations": [],
+      "explanation_groundedness": 1,
+      "avg_hidden_gem_score": 4,
+      "detected_mode": "planning",
+      "latency_ms": 0,
+      "picks": [
+        "spiti-valley",
+        "lonavala-khandala",
+        "jaipur"
+      ]
+    },
+    {
+      "id": "gc-07-solo-offbeat",
+      "strategy": "ranking",
+      "result_count_ok": true,
+      "diversity_ok": true,
+      "constraint_violations": [],
+      "explanation_groundedness": 1,
+      "avg_hidden_gem_score": 5.67,
+      "detected_mode": "planning",
+      "latency_ms": 0,
+      "picks": [
+        "spiti-valley",
+        "rishikesh",
+        "wayanad"
+      ]
+    },
+    {
+      "id": "gc-07-solo-offbeat",
+      "strategy": "reranking",
+      "result_count_ok": true,
+      "diversity_ok": true,
+      "constraint_violations": [],
+      "explanation_groundedness": 1,
+      "avg_hidden_gem_score": 5.67,
+      "detected_mode": "planning",
+      "latency_ms": 0,
+      "picks": [
+        "spiti-valley",
+        "rishikesh",
+        "wayanad"
+      ]
+    },
+    {
+      "id": "gc-08-wildlife-family-december",
+      "strategy": "ranking",
+      "result_count_ok": true,
+      "diversity_ok": true,
+      "constraint_violations": [],
+      "explanation_groundedness": 1,
+      "avg_hidden_gem_score": 3.67,
+      "detected_mode": "planning",
+      "latency_ms": 0,
+      "picks": [
+        "jim-corbett",
+        "jaipur",
+        "jaisalmer"
+      ]
+    },
+    {
+      "id": "gc-08-wildlife-family-december",
+      "strategy": "reranking",
+      "result_count_ok": true,
+      "diversity_ok": true,
+      "constraint_violations": [],
+      "explanation_groundedness": 1,
+      "avg_hidden_gem_score": 3.67,
+      "detected_mode": "planning",
+      "latency_ms": 0,
+      "picks": [
+        "jim-corbett",
+        "jaipur",
+        "jaisalmer"
+      ]
+    }
+  ]
+}
