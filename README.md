@@ -37,6 +37,17 @@ Run it:
 node engine/demo.js
 ```
 
+#### Ranking vs. re-ranking — the methodology swap
+
+| | **Ranking** (default) | **Re-ranking** |
+|---|---|---|
+| **Step 1** | Score every candidate independently (semantic 40% / season fit 30% / session preference 20% / hidden-gem 10%) | Same independent scoring, but keep a wider pool — top 10, not just top 3 |
+| **Step 2** | Sort by score, walk down the list, keep the first 3 that satisfy the diversity rule (no 2 share a primary type) — diversity is a **post-hoc filter** over independently-scored items | Greedily select 3 from the pool of 10 by **jointly re-evaluating** each remaining candidate against what's *already been picked* — diversity/novelty are recalculated at every pick, against the emerging set |
+| **Where a real LLM would plug in** | The per-destination score itself | The joint re-evaluation in step 2 — this is what people usually mean by "an LLM re-ranker" |
+| **When it should win** | Independent relevance is what matters, ties are rare | The *set* matters — e.g. inspiration mode, where 3 destinations shouldn't feel redundant together |
+
+Switching is one parameter: `sageEngine.respond({ utterance, strategy: 'ranking' })` vs. `strategy: 'reranking'` — both return the identical response schema. On the current mock scorer (`llmClient.js`), the two strategies often tie on the golden set (discrete keyword-match buckets, not continuous scores) — that's expected, not a bug. Real divergence shows up once `llmClient.js` is backed by an actual model producing continuous, higher-cardinality scores; the eval harness below is what detects and quantifies that divergence when it starts to matter.
+
 ### 3. AI evaluation framework — `evals/`
 Two layers, kept deliberately distinct:
 
@@ -47,11 +58,31 @@ Run it:
 ```bash
 node evals/runEval.js
 ```
-Current baseline: both strategies clear every hard-constraint check on the golden set (0 violations, 100% diversity pass rate) — a correctness floor, not yet a "which is better" verdict; that requires real usage data per the decision framework in the engine/evals PRD.
+
+#### What each metric means
+
+| Metric | Plain-language meaning |
+|---|---|
+| `result_count_pass_rate` | Fraction of conversations where exactly 3 destinations came back |
+| `diversity_pass_rate` | Fraction where no 2 of the 3 results share a primary category (e.g. not 3 beaches) |
+| `constraint_violation_count` | Count of hard-rule breaks (e.g. a July query returning a monsoon-avoid destination with no warning flag) — should always be 0 |
+| `avg_explanation_groundedness` | Fraction of personalized reasons that actually reference something the user said (mood, negative preference, budget, season) |
+| `avg_hidden_gem_score` | Average offbeat-ness (1–10) of what got recommended — should rise in inspiration mode |
+| `avg_latency_ms` | Engine time per response (near-zero today since there's no network call yet; becomes meaningful once real LLM calls are wired in) |
+
+**Current baseline** (reproduce with `node evals/runEval.js`): both strategies clear every hard-constraint check on the golden set — `result_count_pass_rate` 1.0, `diversity_pass_rate` 1.0, `constraint_violation_count` 0, `avg_explanation_groundedness` 1.0, for both `ranking` and `reranking`. Read this as a **correctness floor, not yet a "which is better" verdict** — the golden set proves both strategies are safe to demo; the real differentiator is production feedback (below).
+
+#### Deciding when to switch strategies in production
+
+1. **Correctness gate (non-negotiable):** a candidate strategy must show `constraint_violation_count = 0` and `result_count_pass_rate = 1.0` on the golden set before it's even considered.
+2. **Real preference signal:** compare `positive_rate` (👍 + save) between strategies via `feedbackSchema.aggregateByStrategy()` over a comparable volume of real sessions — not golden-set output, which is currently near-identical between the two.
+3. **Latency budget:** re-ranking's two-pass structure costs more once real model calls replace the mock — check `avg_latency_ms` against the product's "first recommendation within ~4s" target before shipping it broadly.
+4. **Sample-size honesty:** don't declare a winner on a handful of sessions — report the session count alongside any `positive_rate` comparison.
 
 ### 4. Product documentation
-- **`PRD_TravelOSum_v2_Engine_and_Evals.md`** — how the engine and eval framework work, written for a PM presenting to stakeholders: metric definitions in plain language, the ranking-vs-re-ranking methodology comparison, a decision framework for when to switch strategies in production, and a suggested presentation narrative.
 - **`PRD_TravelOSum_Portfolio.md`** (v0.2) — the active product spec: accounts (managed auth), a real backend, app navigation (About / Browse Destinations / Packages / Book Destinations / Travel History / Cancellation History), a persistent right-side voice assistant panel, conversation logging, and an owner-only traceable evals view. Explicitly scoped as **simulated booking only** (no payment gateway/real inventory) and **no RAG/vector database for v1** (the 50-destination catalogue is small and structured enough that a compact prompt index outperforms embeddings-based retrieval — see §7 of that document for when that would change).
+
+The recommendation-engine architecture and evaluation framework (ranking vs. re-ranking, metric definitions, decision framework) are documented directly in this README rather than in a separate PRD.
 
 ---
 
@@ -62,7 +93,7 @@ Current baseline: both strategies clear every hard-constraint check on the golde
 | Destination dataset | ✅ Built and validated (50 entries) |
 | Recommendation engine (ranking + re-ranking) | ✅ Built and verified (`node engine/demo.js`) |
 | Evaluation harness (golden-set + feedback schema) | ✅ Built and verified (`node evals/runEval.js`) |
-| Product PRDs | ✅ Written; v0.2 has open questions pending review (see that document's final section) |
+| Product PRD | ✅ Written; v0.2 has open questions pending review (see that document's final section) |
 | Frontend (React) | ⬜ Not started |
 | Backend (accounts, bookings, conversation logging, admin evals view) | ⬜ Not started |
 | Real LLM integration (Gemini/Claude) | ⬜ Not started — `engine/llmClient.js` is the seam, currently mocked |
@@ -75,7 +106,6 @@ Current baseline: both strategies clear every hard-constraint check on the golde
 TravelOSum/
   README.md
   PRD_TravelOSum_Portfolio.md              active product spec (v0.2)
-  PRD_TravelOSum_v2_Engine_and_Evals.md     engine + evals architecture and metrics
   destinations.json                         50-destination dataset
   engine/
     destinationStore.js

@@ -11,7 +11,7 @@
 | **Scope** | 50 curated Indian destinations, user accounts, simulated booking, admin-traceable evals |
 | **Status** | Final for build |
 | **Supersedes** | v0.1 of this document (localStorage-only, no-backend scope) |
-| **Companion doc** | `PRD_TravelOSum_v2_Engine_and_Evals.md` (recommendation engine + evals — unchanged by this revision) |
+| **Companion doc** | `README.md` (recommendation engine architecture + evaluation framework — unchanged by this revision) |
 | **Last Updated** | July 2026 |
 
 > **This revision reverses several v0.1 scope decisions on purpose.** v0.1 deliberately kept this app backend-free and account-free to minimize build time. That's no longer the brief — accounts, a real backend, booking, and history are now explicitly requested. This document keeps the *portfolio* discipline (small, fast, low-risk defaults) while expanding the *surface area* to match. Every place this document makes a judgment call instead of asking, it says so — see §15 for the three calls made up front and the reasoning.
@@ -40,7 +40,7 @@
 
 ## 1. Purpose & Hypothesis
 
-TravelOSum is a voice-and-text AI travel discovery assistant. The v0.1 hypothesis — that conversational AI can out-recommend filter-based search within a single session, without needing a backend — still holds and is what the recommendation engine (`engine/`) and eval harness (`evals/`) already prove (see the companion engine/evals PRD).
+TravelOSum is a voice-and-text AI travel discovery assistant. The v0.1 hypothesis — that conversational AI can out-recommend filter-based search within a single session, without needing a backend — still holds and is what the recommendation engine (`engine/`) and eval harness (`evals/`) already prove (see README.md).
 
 This revision adds the second half of what a real product needs: **an actual account, a place to keep coming back to, and a way to see what you did before.** The updated hypothesis:
 
@@ -81,7 +81,7 @@ Everything else in v0.1's scope boundaries (no proactive nudges, no itinerary bu
 
 ## 4. Feature Requirements
 
-FR-01 through FR-10 are unchanged from v0.1 (voice/text input, Sage engine, recommendation engine, destination cards, seasonality, budget, session memory, feedback, inspiration/planning mode, onboarding) — see that document's §6 for full detail, and the companion engine/evals PRD for how the recommendation engine itself works. New requirements below.
+FR-01 through FR-10 are unchanged from v0.1 (voice/text input, Sage engine, recommendation engine, destination cards, seasonality, budget, session memory, feedback, inspiration/planning mode, onboarding) — see that document's §6 for full detail, and README.md for how the recommendation engine itself works. New requirements below.
 
 ### FR-11: Account Creation & Login
 
@@ -141,7 +141,7 @@ Every conversation turn — user utterance, Sage's structured response, which st
 
 | Attribute | Requirement |
 |---|---|
-| **What's stored** | `user_id`, `session_id`, `turn_id`, raw utterance, full structured response JSON (per the schema in the engine/evals PRD §3.3), `strategy_used`, `latency_ms`, `timestamp` |
+| **What's stored** | `user_id`, `session_id`, `turn_id`, raw utterance, full structured response JSON (per the response schema described in README.md), `strategy_used`, `latency_ms`, `timestamp` |
 | **Why** | (a) powers Travel History/"what Sage knows about you" continuity across devices, (b) is the raw material for the owner-traceable evals in FR-15, (c) becomes a real (not golden-set-only) corpus for expanding `evals/golden-conversations.json` later |
 | **Retention/privacy** | Included in the account-deletion flow (FR-11); disclosed in-app that conversation text is stored, consistent with the existing disclosure that conversation text is sent to the LLM |
 
@@ -154,12 +154,12 @@ An admin-only view, accessible solely to you as the app owner, distinct from any
 | Attribute | Requirement |
 |---|---|
 | **Access control** | Gated by an `is_owner` flag on the account row (or a separate admin credential) — never exposed in the regular app nav |
-| **What it shows** | (a) The existing golden-set eval report (`evals/eval-report.json`/`.md`, per the engine/evals PRD §5) rendered in-app rather than only via CLI, (b) real usage aggregates from FR-14's logs and the feedback events (👍/👎/save/never-show) — positive/negative rate **per strategy**, per the `aggregateByStrategy` function already built in `evals/feedbackSchema.js`, (c) the ability to drill into an individual session's full conversation trace |
+| **What it shows** | (a) The existing golden-set eval report (`evals/eval-report.json`/`.md`, per README.md) rendered in-app rather than only via CLI, (b) real usage aggregates from FR-14's logs and the feedback events (👍/👎/save/never-show) — positive/negative rate **per strategy**, per the `aggregateByStrategy` function already built in `evals/feedbackSchema.js`, (c) the ability to drill into an individual session's full conversation trace |
 | **Why it's separate from the golden-set CLI tooling** | The CLI (`node evals/runEval.js`) answers "did we break something" and is a build-time tool. This view answers "what are real users actually experiencing," which only exists once FR-14 is collecting real traffic — the two are complementary, not duplicates |
 
 **Acceptance criteria:**
 - No non-owner account can reach this view, by URL guessing or otherwise (server-side check, not just hidden UI)
-- The per-strategy comparison shown here uses the same metric definitions as the engine/evals PRD §5.1, so a number here means the same thing as the same-named number in a CLI report
+- The per-strategy comparison shown here uses the same metric definitions as README.md, so a number here means the same thing as the same-named number in a CLI report
 
 ---
 
@@ -204,7 +204,7 @@ No new destination data required — packages are a thin composition layer over 
 
 ## 5. Data Model
 
-Extends the schemas already defined in `destinations.json` and the engine/evals PRD. New tables/collections needed once a real backend exists (§9):
+Extends the schemas already defined in `destinations.json` and README.md. New tables/collections needed once a real backend exists (§9):
 
 ### 5.1 `users`
 
@@ -296,11 +296,11 @@ Directly the shape already defined in `evals/feedbackSchema.js`, now persisted p
               ▼                                │  Serverless LLM proxy  │
       destinations.json                        │  (holds Gemini/Claude  │
       + packages.json                          │   key — unchanged from │
-      (bundled with app)                       │   the engine/evals PRD)│
+      (bundled with app)                       │   README.md)          │
                                                 └───────────────────────┘
 ```
 
-Key changes from v0.1's architecture: the browser is no longer the only place state lives — `users`, `bookings`, `session_profile`, `conversation_logs`, and `feedback_events` move server-side. The LLM proxy from the engine/evals PRD is unchanged; it now sits behind the same backend rather than as a lone serverless function.
+Key changes from v0.1's architecture: the browser is no longer the only place state lives — `users`, `bookings`, `session_profile`, `conversation_logs`, and `feedback_events` move server-side. The LLM proxy described in README.md is unchanged; it now sits behind the same backend rather than as a lone serverless function.
 
 ---
 
@@ -356,7 +356,7 @@ If any of those become true, `pgvector` (an extension of the same Postgres insta
 - Auto-generated REST/RPC API over the schema, removing the need to hand-write CRUD endpoints for bookings/history
 
 **What still needs custom code:**
-- The serverless LLM proxy (unchanged from the engine/evals PRD) — Supabase doesn't replace this, it sits alongside it holding the Gemini/Claude key
+- The serverless LLM proxy (unchanged from README.md) — Supabase doesn't replace this, it sits alongside it holding the Gemini/Claude key
 - The Sage orchestration logic (`engine/`) — this is business logic, not a database concern, and stays exactly as built
 - The FR-15 admin aggregation view (reading `conversation_logs` + `feedback_events` and computing the same metrics as `evals/metrics.js`, server-side)
 
@@ -396,7 +396,7 @@ Extends v0.1's risk table:
 | Custom auth security bugs (password storage, session fixation, etc.) | Avoided entirely by delegating to a managed provider (§9) rather than hand-rolling |
 | A user perceives a "confirmed booking" as a real reservation | Explicit, persistent visual disclosure on every booking-related screen (§2, §4 FR-16) |
 | Row-level security misconfigured, leaking one user's bookings/conversations to another | Treat RLS policies as a reviewed part of the build, not an afterthought — test with two real accounts before considering FR-11/FR-14 done |
-| Scope roughly doubles versus v0.1 (accounts + backend + booking + admin view, on top of the existing engine/evals work) | Sequence via the phased plan in §14 rather than building all surfaces at once; the recommendation engine and evals (already built, per the companion PRD) are unaffected and don't need to be redone |
+| Scope roughly doubles versus v0.1 (accounts + backend + booking + admin view, on top of the existing engine/evals work, documented in README.md) | Sequence via the phased plan in §14 rather than building all surfaces at once; the recommendation engine and evals (already built, documented in README.md) are unaffected and don't need to be redone |
 | "Packages" feature built to the wrong interpretation | Flagged explicitly in §15 — confirm before building FR-19 |
 
 ---
