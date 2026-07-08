@@ -1,6 +1,6 @@
 # TravelOSum
 
-**AI voice destination discovery engine — a portfolio project.**
+**AI voice destination discovery engine.**
 
 TravelOSum is a conversational travel discovery assistant ("Sage") scoped to a curated set of Indian destinations. Instead of filters and top-10 lists, it understands traveler intent through conversation — mood, budget, season, group type, things explicitly ruled out — and returns 3 explainable recommendations at a time.
 
@@ -80,7 +80,7 @@ node evals/runEval.js
 4. **Sample-size honesty:** don't declare a winner on a handful of sessions — report the session count alongside any `positive_rate` comparison.
 
 ### 4. Product documentation
-- **`PRD_TravelOSum_Portfolio.md`** (v0.2) — the active product spec: accounts (managed auth), a real backend, app navigation (About / Browse Destinations / Packages / Book Destinations / Travel History / Cancellation History), a persistent right-side voice assistant panel, conversation logging, and an owner-only traceable evals view. Explicitly scoped as **simulated booking only** (no payment gateway/real inventory) and **no RAG/vector database for v1** (the 50-destination catalogue is small and structured enough that a compact prompt index outperforms embeddings-based retrieval — see §7 of that document for when that would change).
+- **`PRD_TravelOSum.md`** (v0.2) — the active product spec: accounts (managed auth), a real backend, app navigation (About / Browse Destinations / Packages / Book Destinations / Travel History / Cancellation History), a persistent right-side voice assistant panel, conversation logging, and an owner-only traceable evals view. Explicitly scoped as **simulated booking only** (no payment gateway/real inventory) and **no RAG/vector database for v1** (the 50-destination catalogue is small and structured enough that a compact prompt index outperforms embeddings-based retrieval — see §7 of that document for when that would change).
 
 The recommendation-engine architecture and evaluation framework (ranking vs. re-ranking, metric definitions, decision framework) are documented directly in this README rather than in a separate PRD.
 
@@ -105,8 +105,8 @@ The recommendation-engine architecture and evaluation framework (ranking vs. re-
 ```
 TravelOSum/
   README.md
-  PRD_TravelOSum_Portfolio.md              active product spec (v0.2)
-  destinations.json                         50-destination dataset
+  PRD_TravelOSum.md                        active product spec (v0.2)
+  destinations.json                        50-destination dataset
   engine/
     destinationStore.js
     constraints.js
@@ -130,4 +130,4 @@ Node.js (any recent version) — no `npm install` needed, the engine and evals u
 
 ## Next steps
 
-Per `PRD_TravelOSum_Portfolio.md` §14 (Phased Build Plan): accounts/backend foundation, then navigation sections, then simulated booking/history, then the voice panel wired to a real backend with conversation logging, then the owner-only evals view.
+Per `PRD_TravelOSum.md` §14 (Phased Build Plan): accounts/backend foundation, then navigation sections, then simulated booking/history, then the voice panel wired to a real backend with conversation logging, then the owner-only evals view.

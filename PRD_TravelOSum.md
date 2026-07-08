@@ -1,20 +1,20 @@
 # Product Requirements Document
 # TravelOSum — AI Voice Destination Discovery Engine
-## Portfolio Phase (v0.2 — Accounts, Backend & Full App Surface)
+## v0.2 — Accounts, Backend & Full App Surface
 
 ---
 
 | | |
 |---|---|
 | **Product** | TravelOSum — AI Voice Destination Discovery Engine |
-| **Version** | v0.2 — Portfolio Proof of Concept, now with accounts, backend, and full navigation |
+| **Version** | v0.2 — now with accounts, backend, and full navigation |
 | **Scope** | 50 curated Indian destinations, user accounts, simulated booking, admin-traceable evals |
 | **Status** | Final for build |
 | **Supersedes** | v0.1 of this document (localStorage-only, no-backend scope) |
 | **Companion doc** | `README.md` (recommendation engine architecture + evaluation framework — unchanged by this revision) |
 | **Last Updated** | July 2026 |
 
-> **This revision reverses several v0.1 scope decisions on purpose.** v0.1 deliberately kept this app backend-free and account-free to minimize build time. That's no longer the brief — accounts, a real backend, booking, and history are now explicitly requested. This document keeps the *portfolio* discipline (small, fast, low-risk defaults) while expanding the *surface area* to match. Every place this document makes a judgment call instead of asking, it says so — see §15 for the three calls made up front and the reasoning.
+> **This revision reverses several v0.1 scope decisions on purpose.** v0.1 deliberately kept this app backend-free and account-free to minimize build time. That's no longer the brief — accounts, a real backend, booking, and history are now explicitly requested. This document keeps the same lean discipline (small, fast, low-risk defaults) while expanding the *surface area* to match. Every place this document makes a judgment call instead of asking, it says so — see §15 for the three calls made up front and the reasoning.
 
 ---
 
@@ -22,7 +22,7 @@
 
 1. [Purpose & Hypothesis](#1-purpose--hypothesis)
 2. [Design Principles](#2-design-principles)
-3. [Portfolio Scope Boundaries (Updated)](#3-portfolio-scope-boundaries-updated)
+3. [Scope Boundaries (Updated)](#3-scope-boundaries-updated)
 4. [Feature Requirements](#4-feature-requirements)
 5. [Data Model](#5-data-model)
 6. [Technical Architecture](#6-technical-architecture)
@@ -30,7 +30,7 @@
 8. [Frontend Design](#8-frontend-design)
 9. [Backend Design](#9-backend-design)
 10. [Non-Functional Requirements](#10-non-functional-requirements)
-11. [Success Criteria (Portfolio Phase)](#11-success-criteria-portfolio-phase)
+11. [Success Criteria](#11-success-criteria)
 12. [Risks & Mitigations](#12-risks--mitigations)
 13. [Path to Full-Scale](#13-path-to-full-scale)
 14. [Phased Build Plan](#14-phased-build-plan)
@@ -46,7 +46,7 @@ This revision adds the second half of what a real product needs: **an actual acc
 
 > *"A traveler should be able to create an account, have a real conversation with Sage, browse and 'book' a destination, and see that trip reflected in their history — as a coherent app, not a disconnected chat demo."*
 
-This is still a portfolio build, not a commercial launch: no real payments, no real inventory, no real customer support obligations. See §3 for exactly where the "simulated" line is drawn.
+This is still a small, fast build, not a commercial launch: no real payments, no real inventory, no real customer support obligations. See §3 for exactly where the "simulated" line is drawn.
 
 ---
 
@@ -59,17 +59,17 @@ Unchanged from v0.1, plus one addition made necessary by simulated booking:
 3. **Constraints are first-class.**
 4. **Delight through surprise.**
 5. **Memory within a session is non-negotiable; cross-session learning is simulated, not a live engine** (v0.1 decision, unchanged).
-6. **Never let "simulated" look like "real."** Anywhere the app shows a booking, confirmation ID, or cancellation, it must be visibly and unambiguously a demo artifact — no real payment amounts implied as charged, no fake transaction IDs formatted to look like a real gateway's. This isn't just an ethics nicety: a public portfolio URL that *looks* like it processed a real payment is a trust and legal problem the moment anyone screenshots it out of context.
+6. **Never let "simulated" look like "real."** Anywhere the app shows a booking, confirmation ID, or cancellation, it must be visibly and unambiguously a demo artifact — no real payment amounts implied as charged, no fake transaction IDs formatted to look like a real gateway's. This isn't just an ethics nicety: a public demo URL that *looks* like it processed a real payment is a trust and legal problem the moment anyone screenshots it out of context.
 
 ---
 
-## 3. Portfolio Scope Boundaries (Updated)
+## 3. Scope Boundaries (Updated)
 
 | Area | v0.1 decision | v0.2 decision | Why it changed |
 |---|---|---|---|
 | Backend | None — localStorage only | **Real backend required** (§9) | Accounts, booking, and cross-device history can't live in localStorage |
 | Accounts | None | **Real signup/login** via a managed auth provider (§9) | Explicitly requested; must persist across devices/sessions |
-| Booking | Explicitly out of scope | **Simulated booking only** — no payment gateway, no real inventory | Confirmed via your input: full payment integration is out of scope for portfolio timeline; "Book Destinations" and history pages are demo-data flows tied to the real account |
+| Booking | Explicitly out of scope | **Simulated booking only** — no payment gateway, no real inventory | Confirmed via your input: full payment integration is out of scope for this build's timeline; "Book Destinations" and history pages are demo-data flows tied to the real account |
 | Frontend stack | Vanilla JS (no framework) | **React** | Confirmed via your input: auth-gated routes, forms, and multi-section nav outgrow hand-rolled DOM state management |
 | Vector DB / RAG | Not discussed | **Not used in v1** (§7) | At 50–100 structured destinations, a compact catalogue index in the prompt outperforms embeddings-based retrieval on cost and simplicity; revisit only if the catalogue or content type changes materially |
 | Cross-session learning | Simulated via one demo profile | **Unchanged** — still simulated, now backed by a real per-user row instead of a hardcoded object | Real accounts make "returning user" data structurally real, but the *learning engine* itself (tag-weight reinforcement) is still deferred to full-scale (§13), same reasoning as v0.1 |
@@ -106,7 +106,7 @@ Persistent side navigation with the following sections (as requested):
 
 | Section | Purpose |
 |---|---|
-| **About TravelOSum** | Static content — what the app is, how Sage works, a short explainer of the AI reasoning (good portfolio surface for technical reviewers) |
+| **About TravelOSum** | Static content — what the app is, how Sage works, a short explainer of the AI reasoning (good surface for technical reviewers) |
 | **Browse Destinations** | Non-conversational grid/filter view of all 50 destinations (filter by region, type, budget tier, best month) — a deliberate second path into the same catalogue the AI uses, useful in a demo to contrast "here's filtering" vs. "here's Sage understanding you" |
 | **Packages** | A small set of hand-curated multi-destination bundles (e.g., "Golden Triangle," "Kerala Backwaters + Munnar") composed from the existing 50-destination catalogue with a combined price estimate — content, not a new data system. *(Flagged in §15 — confirm this is the intended reading of "Packages.")* |
 | **Book Destinations** | Simulated booking flow (§4 FR-16) |
@@ -178,7 +178,7 @@ Per the confirmed decision in §3: no payment gateway, no real inventory.
 
 ### FR-17: About TravelOSum
 
-Static page: what the product is, the Sage persona, a short "how the AI reasons" explainer aimed at a technical reviewer audience — this is portfolio narrative surface, not a feature with acceptance criteria beyond "renders correctly."
+Static page: what the product is, the Sage persona, a short "how the AI reasons" explainer aimed at a technical reviewer audience — this is narrative surface, not a feature with acceptance criteria beyond "renders correctly."
 
 ### FR-18: Browse Destinations
 
@@ -347,7 +347,7 @@ If any of those become true, `pgvector` (an extension of the same Postgres insta
 
 ## 9. Backend Design
 
-**Provider: Supabase**, per the confirmed decision in §3 (managed auth + hosted Postgres + row-level security), chosen over a hand-rolled Node/Express + custom auth stack for one reason: it collapses "build auth" and "build a database" into configuration rather than code, which is where a portfolio timeline is most at risk of stalling. Firebase is a reasonable alternative if there's an existing preference; Supabase is recommended here because the relational shape of `users` → `bookings`/`conversation_logs`/`feedback_events` (§5) maps directly onto Postgres tables and foreign keys rather than a document store.
+**Provider: Supabase**, per the confirmed decision in §3 (managed auth + hosted Postgres + row-level security), chosen over a hand-rolled Node/Express + custom auth stack for one reason: it collapses "build auth" and "build a database" into configuration rather than code, which is where a lean build timeline is most at risk of stalling. Firebase is a reasonable alternative if there's an existing preference; Supabase is recommended here because the relational shape of `users` → `bookings`/`conversation_logs`/`feedback_events` (§5) maps directly onto Postgres tables and foreign keys rather than a document store.
 
 **What Supabase provides out of the box:**
 - Email/password + social login, session/token handling — the app never touches a raw password
@@ -376,7 +376,7 @@ Extends v0.1's NFRs (unchanged: performance targets, browser support for voice, 
 
 ---
 
-## 11. Success Criteria (Portfolio Phase)
+## 11. Success Criteria
 
 Extends v0.1's demo-checkable criteria list with:
 
@@ -405,7 +405,7 @@ Extends v0.1's risk table:
 
 Unchanged in spirit from v0.1, updated for this revision:
 
-- Real payment gateway + real inventory, replacing simulated booking (§4 FR-16) — the single biggest jump from portfolio to commercial, deliberately deferred
+- Real payment gateway + real inventory, replacing simulated booking (§4 FR-16) — the single biggest jump from this build to a commercial one, deliberately deferred
 - Real cross-session learning engine (tag-weight reinforcement over the now-real `session_profile` rows), superseding the still-simulated version
 - Vector DB (`pgvector`, per §7) if the catalogue or content type outgrows structured-filtering
 - Dataset expansion from 50 toward the original 100-destination ambition
