@@ -7,6 +7,7 @@
 | | |
 |---|---|
 | **Product** | TravelOSum — AI Voice Destination Discovery Engine |
+| **Author** | Sudip Roy |
 | **Version** | v0.2 — now with accounts, backend, and full navigation |
 | **Scope** | 50 curated Indian destinations, user accounts, simulated booking, admin-traceable evals |
 | **Status** | Final for build |

@@ -2,6 +2,8 @@
 
 **AI voice destination discovery engine.**
 
+**Author:** Sudip Roy
+
 TravelOSum is a conversational travel discovery assistant ("Sage") scoped to a curated set of Indian destinations. Instead of filters and top-10 lists, it understands traveler intent through conversation — mood, budget, season, group type, things explicitly ruled out — and returns 3 explainable recommendations at a time.
 
 This repo currently contains the **product planning** and the **recommendation engine + evaluation harness**. Frontend, backend, and accounts are specified but not yet built — see [Status](#status) below.
